@@ -4,7 +4,8 @@
  */
 
  apply plugin: 'com.android.library'
- apply plugin: 'com.github.dcendents.android-maven' //included for jitpack
+ apply plugin: 'maven-publish'
+// apply plugin: 'com.github.dcendents.android-maven' //included for jitpack
 
 android {
     compileSdkVersion 28
@@ -37,7 +38,14 @@ android {
         }
     }
 
-    sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jni/'] } }
+//    sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jni/'] } }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = [] // 중복 참조 방지
+        }
+    }
+
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
@@ -46,12 +54,20 @@ android {
 
 }
 
+ repositories {
+     flatDir {
+         dirs 'libs'
+     }
+ }
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.android.support:appcompat-v7:28.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.github.felHR85:UsbSerial:6.1.0'
+//    implementation 'com.github.felHR85:UsbSerial:6.1.0'
+    implementation files('libs/UsbSerial-6.1.0.aar')
+    implementation 'com.squareup.okio:okio:2.1.0'
 }
